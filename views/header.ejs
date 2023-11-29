@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Todo List App</title>
+    <link
+      rel="shortcut icon"
+      href="https://cdn-icons-png.flaticon.com/512/4697/4697260.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body>
+    <div class="heading">
+      <span class="heading">To Do List App</span>
+      <p>
+        This is a simple Todo list app made with: HTML, CSS, JavaScript, Node
+        js and ejs templating You can add tasks to the list by typing them into
+        the input,
+      </p>
+    </div>
+    <script>
+      // Delete an item by click the check box.
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const checkboxes = document.querySelectorAll(".checkbox");
+
+        checkboxes.forEach((checkbox) => {
+          checkbox.addEventListener("click", function () {
+            const index = this.closest(".item").getAttribute("data-index");
+            // Send an AJAX request to the server to remove the item
+            fetch("/removeItem", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ index: index }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                // Handle the response if needed
+                console.log(data);
+                if (data.success) {
+                  window.location.reload();
+                }
+              })
+              .catch((error) => console.error("Error:", error));
+          });
+        });
+      });
+
+      // Mark as complete an item
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const items = document.querySelectorAll(".item");
+
+        items.forEach((item) => {
+          const checkbox = item.querySelector(".checkbox");
+          const completedSpan = item.querySelector(".completed");
+
+          completedSpan?.addEventListener("click", function () {
+            const index = item.getAttribute("data-index");
+            const completed = item.getAttribute("data-completed") === "true";
+
+            // Send an AJAX request to the server to update the completion status
+            fetch("/updateCompletionStatus", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ index: index, completed: !completed }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                // Handle the response if needed
+                console.log(data);
+
+                // Update the visual representation of completion status
+                item.setAttribute("data-completed", !completed);
+                if (data.success) {
+                  if (!completed) {
+                    item.style.backgroundColor = "#c6e48b"; // Set the color when marked as complete
+                    completedSpan.textContent = "Marked as done";
+                  } else {
+                    item.style.backgroundColor = ""; // Reset the background color
+                    completedSpan.textContent = "completed";
+                  }
+                }
+              })
+              .catch((error) => console.error("Error:", error));
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

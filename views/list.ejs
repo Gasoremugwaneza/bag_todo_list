@@ -1,0 +1,28 @@
+<!-- This line of code add the header to this file  -->
+<%- include("header"); -%>
+    <div class="box" id="heading">
+        <h1><%= kindOfDay %> </h1>
+    </div>
+
+    <div class="box">
+        <% for (let i=0; i<AnotherItem.length; i++) { %>
+            <div class="item" data-index="<%= i %>" data-completed="<%= AnotherItem[i].completed %>">
+                <button type="checkbox" id="checklist" class="checkbox"><i class="material-icons" style="font-size:30px;color:red;cursor: pointer;">&#xe872;</i></button>
+                
+                <p><%= AnotherItem[i] %></p>
+                <span class="completed">completed</span>
+            </div>
+            
+            
+            
+                
+        <% } %>
+        <form class="item" action="/" method="post">
+            <input type="text" name="next" placeholder="Add new Item" autocomplete="off">
+            <button type="submit">+</button>
+        </form>
+    </div>
+    
+
+    <!-- This line of code will add the footer.ejs file to this file using ejs. -->
+    <%- include("footer"); -%>
